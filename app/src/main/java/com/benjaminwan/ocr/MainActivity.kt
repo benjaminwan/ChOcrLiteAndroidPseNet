@@ -122,3 +122,4 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         const val REQUEST_SELECT_IMAGE = 666
         const val TAG = "OcrLite"
     }
+}
