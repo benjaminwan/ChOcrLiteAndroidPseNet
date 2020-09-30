@@ -25,7 +25,7 @@
     <TextView
         android:id="@+id/resultTV"
         android:layout_width="match_parent"
-        android:layout_height="180dp"
+        android:layout_height="100dp"
         android:hint="结果会在这里显示"
         android:padding="8dp"
         android:textSize="12sp" />
@@ -39,18 +39,164 @@
             android:id="@+id/scaleTv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Scale:6/10" />
+            android:text="Size:0(60%)" />
 
         <SeekBar
-            android:id="@+id/seekBar"
+            android:id="@+id/scaleSeekBar"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:max="100"
+            android:min="10"
+            android:progress="60" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/boxScoreThreshTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="BoxScoreThresh:0.66" />
+
+        <SeekBar
+            android:id="@+id/boxScoreThreshSeekBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:max="100"
+            android:min="1"
+            android:progress="66" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/boxThreshTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="BoxThresh:0.48" />
+
+        <SeekBar
+            android:id="@+id/boxThreshSeekBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:max="100"
+            android:min="1"
+            android:progress="48" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/minAreaTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="MinArea:3" />
+
+        <SeekBar
+            android:id="@+id/minAreaSeekBar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:max="10"
             android:min="1"
-            android:progress="6" />
+            android:progress="3" />
 
     </LinearLayout>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/angleWidthTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="AngleWidth:1.0" />
+
+        <SeekBar
+            android:id="@+id/angleWidthSeekBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:max="20"
+            android:min="10"
+            android:progress="10" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/angleHeightTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="AngleHeight:1.0" />
+
+        <SeekBar
+            android:id="@+id/angleHeightSeekBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:max="20"
+            android:min="10"
+            android:progress="10" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/textWidthTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="TextWidth:1.1" />
+
+        <SeekBar
+            android:id="@+id/textWidthSeekBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:max="20"
+            android:min="10"
+            android:progress="11" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/textHeightTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="TextHeight:1.1" />
+
+        <SeekBar
+            android:id="@+id/textHeightSeekBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:max="20"
+            android:min="10"
+            android:progress="11" />
+
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -67,19 +213,11 @@
             android:textSize="12sp" />
 
         <Button
-            android:id="@+id/detectScaleBtn"
+            android:id="@+id/detectBtn"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="detect Scale"
-            android:textSize="12sp" />
-
-        <Button
-            android:id="@+id/detectResizeBtn"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="detect Resize"
+            android:text="detect"
             android:textSize="12sp" />
     </LinearLayout>
 

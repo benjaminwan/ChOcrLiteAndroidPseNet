@@ -71,7 +71,9 @@ OcrLite::OcrLite(JNIEnv *env, jobject assetManager) {
     //LOGI("初始化完成!");
 }
 
-std::vector<TextBox> OcrLite::getTextBoxes(cv::Mat &src, ScaleParam &s) {
+std::vector<TextBox>
+OcrLite::getTextBoxes(cv::Mat &src, ScaleParam &s,
+                      float boxScoreThresh, float boxThresh, float minArea) {
     std::vector<TextBox> rsBoxes;
     ncnn::Mat input = ncnn::Mat::from_pixels_resize(src.data, ncnn::Mat::PIXEL_BGR2RGB,
                                                     src.cols, src.rows,
@@ -84,16 +86,16 @@ std::vector<TextBox> OcrLite::getTextBoxes(cv::Mat &src, ScaleParam &s) {
     ncnn::Mat out;
     extractor.extract("out", out);
 
-    cv::Mat fmapmat(s.dstHeight, s.dstWidth, CV_32FC1);
-    memcpy(fmapmat.data, (float *) out.data, s.dstWidth * s.dstHeight * sizeof(float));
+    cv::Mat fMapMat(s.dstHeight, s.dstWidth, CV_32FC1);
+    memcpy(fMapMat.data, (float *) out.data, s.dstWidth * s.dstHeight * sizeof(float));
 
-    cv::Mat norfmapmat;
+    cv::Mat norfMapMat;
 
-    norfmapmat = fmapmat > thresh;
+    norfMapMat = fMapMat > boxThresh;
 
     rsBoxes.clear();
     std::vector<std::vector<cv::Point>> contours;
-    cv::findContours(norfmapmat, contours, cv::RETR_LIST, cv::CHAIN_APPROX_SIMPLE);
+    cv::findContours(norfMapMat, contours, cv::RETR_LIST, cv::CHAIN_APPROX_SIMPLE);
     for (int i = 0; i < contours.size(); ++i) {
         std::vector<cv::Point> minBox;
         float minEdgeSize, allEdgeSize;
@@ -101,7 +103,7 @@ std::vector<TextBox> OcrLite::getTextBoxes(cv::Mat &src, ScaleParam &s) {
 
         if (minEdgeSize < minArea)
             continue;
-        float score = boxScoreFast(fmapmat, contours[i]);
+        float score = boxScoreFast(fMapMat, contours[i]);
 
         if (score < boxScoreThresh)
             continue;
@@ -245,14 +247,17 @@ TextLine OcrLite::getTextLine(cv::Mat &src, int angleIndex) {
     return scoreToString(blob263);
 }
 
-std::string OcrLite::detect(cv::Mat &src, ScaleParam &scale, cv::Mat &imgBox) {
+std::string OcrLite::detect(cv::Mat &src, ScaleParam &scale, cv::Mat &imgBox,
+                            float boxScoreThresh, float boxThresh, float minArea,
+                            float angleScaleWidth, float angleScaleHeight,
+                            float textScaleWidth, float textScaleHeight) {
     //图像文字分割
     LOGI("=====Start detect=====");
     LOGI("ScaleParam(sw:%d,sh:%d,dw:%d,dH%d,%f,%f)", scale.srcWidth, scale.srcHeight,
          scale.dstWidth, scale.dstHeight,
          scale.scaleWidth, scale.scaleHeight);
     long startTime = getCurrentTime();
-    std::vector<TextBox> textBoxes = getTextBoxes(src, scale);
+    std::vector<TextBox> textBoxes = getTextBoxes(src, scale, boxScoreThresh, boxThresh, minArea);
     LOGI("TextBoxes Size = %ld", textBoxes.size());
     long endTimeTextBoxes = getCurrentTime();
     printTime("Time getTextBoxes", startTime, endTimeTextBoxes);
@@ -262,17 +267,19 @@ std::string OcrLite::detect(cv::Mat &src, ScaleParam &scale, cv::Mat &imgBox) {
         LOGI("-----TextBox[%d] score(%f)-----", i, textBoxes[i].score);
         long startTextLine = getCurrentTime();
         cv::Mat angleImg;//用于识别文字方向
-        cv::RotatedRect rectAngle = getPartRectPlus(textBoxes[i].box, 0.5);//识别文字方向的范围可以小一些
+        cv::RotatedRect rectAngle = getPartRect(textBoxes[i].box, angleScaleWidth,
+                                                angleScaleHeight);//识别文字方向的范围可以小一些
         RRLib::getRotRectImg(rectAngle, src, angleImg);
         LOGI("rectAngle(%f, %f)", rectAngle.size.width, rectAngle.size.height);
 
         cv::Mat textImg;//用于识别文字
-        cv::RotatedRect rect = getPartRectPlus(textBoxes[i].box, 1.0);//识别文字的范围需要加大一些
-        RRLib::getRotRectImg(rect, src, textImg);
-        LOGI("rect(%f, %f)", rect.size.width, rect.size.height);
+        cv::RotatedRect rectText = getPartRect(textBoxes[i].box, textScaleWidth,
+                                               textScaleHeight);//识别文字的范围需要加大一些
+        RRLib::getRotRectImg(rectText, src, textImg);
+        LOGI("rectText(%f, %f)", rectText.size.width, rectText.size.height);
 
         //文字框
-        drawTextBox(imgBox, rect);
+        drawTextBox(imgBox, rectText);
         for (int p = 0; p < 4; ++p) {
             LOGI("Pt%d(x: %d, y: %d)", p, textBoxes[i].box[p].x, textBoxes[i].box[p].y);
         }

@@ -37,10 +37,14 @@ class OcrLite {
 public:
     OcrLite(JNIEnv *env, jobject assetManager);
 
-    std::string detect(cv::Mat &src, ScaleParam &scale, cv::Mat &imgBox);
+    std::string detect(cv::Mat &src, ScaleParam &scale, cv::Mat &imgBox,
+                                float boxScoreThresh, float boxThresh, float minArea,
+                                float angleScaleWidth, float angleScaleHeight,
+                                float textScaleWidth, float textScaleHeight);
 
 private:
-    std::vector<TextBox> getTextBoxes(cv::Mat &src, ScaleParam &s);
+    std::vector<TextBox> getTextBoxes(cv::Mat &src, ScaleParam &s,
+                                      float boxScoreThresh, float boxThresh, float minArea);
 
     Angle getAngle(cv::Mat &src);
 
@@ -53,10 +57,10 @@ private:
     ncnn::Net pseNet, angleNet, crnnNet, crnnVerticalNet;
     int numThread = 4;
 
-    const float unClipRatio = 1.1;
-    const float boxScoreThresh = 0.5;
-    const float thresh = 0.3;
-    const int minArea = 3;
+    //const float unClipRatio = 1.5;
+    //const float boxScoreThresh = 0.5;
+    //const float thresh = 0.3;
+    //const float minArea = 3;
     const float meanValsPse[3] = {0.485 * 255, 0.456 * 255, 0.406 * 255};
     const float normValsPse[3] = {1.0 / 0.229 / 255.0, 1.0 / 0.224 / 255.0, 1.0 / 0.225 / 255.0};
 
