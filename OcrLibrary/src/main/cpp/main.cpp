@@ -38,5 +38,4 @@ Java_com_benjaminwan_ocrlibrary_OcrEngine_detect(JNIEnv *env, jobject thiz, jobj
     matToBitmap(env, imgOut, output);
 
     return env->NewStringUTF(outStr.c_str());
-
 }

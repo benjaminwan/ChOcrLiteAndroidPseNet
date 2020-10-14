@@ -136,6 +136,7 @@ getMiniBoxes(std::vector<cv::Point> &invec, std::vector<cv::Point> &minboxvec, f
     minedgesize = (std::min)(textrect.size.width, textrect.size.height);
     alledgesize = 2.f * (textrect.size.width + textrect.size.height);
 
+
     return 1;
 }
 
