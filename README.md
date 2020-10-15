@@ -13,7 +13,7 @@ chineseocr lite Android PseNet Demo，超轻量级中文OCR Android Demo，支�
 采用ncnn神经网络前向计算框架[https://github.com/Tencent/ncnn](https://github.com/Tencent/ncnn)
 
 整合了如下算法：
-psenet(图像分割)+shufflenet(文字方向检测)+crnn-lstm(文字识别)
+PseNet(图像分割)+AngleNet(文字方向检测)+CRNN-LSTM(文字识别)
 
 #### 说明
 1. 封装为独立的Library。
